@@ -1,0 +1,111 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1138\cocoasubrtf510
+{\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\fswiss\fcharset0 ArialMT;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720
+
+\f0\fs24 \cf0 \
+\pard\pardeftab720\sa240
+
+\i\fs32 \cf0 1.How bank and shop talk:
+\i0\fs24 \
+\pard\pardeftab720\sa240
+
+\f1\b\fs48 \cf0 Report
+\f0\b0\fs24 \
+\pard\pardeftab720\sa240
+
+\fs30 \cf0 shop establish connection with bank (client is shop bank is server). client send a client sentence containing transaction information in following format: \'93firstname&familyname&cardnumber&spending\'94 e.g.\'93John&Lennon&12345678&150\'94\uc0\u8232 bank read sentence and takes variables out and look up database for mapping.Once finished mapping, bank send a sentence to shop:\'94nouser\'94 or \'93approved\'94 or "insufficient" and change its database,and connection between bank and shop closed. once shop received information, it prints relevant pages to the user.
+\fs24 \
+\pard\pardeftab720\sa240
+
+\i\fs32 \cf0 1.1 establishing connect issue:
+\i0\fs24 \
+\pard\pardeftab720\sa240
+
+\fs30 \cf0 when shop trying to connect with the bank, it will reconnect bank if connection failed. there is a while loop handling this, it keeps trying to connect bank until connection established.
+\fs24 \
+\pard\pardeftab720\sa240
+
+\i\fs32 \cf0 1.2 data format error checking in the bank server:
+\i0\fs24 \
+\pard\pardeftab720\sa240
+
+\fs30 \cf0 user-name family name card number are case sensitive and cannot contain special characters: there is a line checking special characters:\uc0\u8232 Pattern namePattern = Pattern.compile("/[^a-z0-9 ]/gi");\u8232 bank account must be longer or equal to 8 number.
+\fs24 \
+\pard\pardeftab720\sa240
+
+\i\fs32 \cf0 2.Shop and Client communication:
+\i0\fs24 \
+\pard\pardeftab720\sa240
+
+\fs30 \cf0 Shop implemented HTTP1.o protocol which close connection directly after sending the required file or finished handing client request. Shop server implemented 2 method handling user information: GET and POST methods.
+\fs24 \
+\pard\pardeftab720\sa240
+
+\i\fs32 \cf0 2.1 GET
+\i0\fs24 \
+\pard\pardeftab720\sa240
+
+\fs30 \cf0 it takes the first client sentence to check required documentation.The printPage(String filename, DataOutputStream outToClient) function will search file name in current directory and send required file to client once find it or send "HTTP/1.0 404 Not found\\r\\n" response and 404.html to user if the required file cannot be found.
+\fs24 \
+\pard\pardeftab720\sa240
+
+\i\fs32 \cf0 2.2 POST
+\i0\fs24 \
+\pard\pardeftab720\sa240
+
+\fs30 \cf0 POST will first find content length of the message by the client message "Content-\uc0\u8232 Length: "and read char by char to get message from client.all post message will be stored as key value pair in a hash map.\u8232 The shop will sum up total cost of order by looking up price.txt and suburb.txt.
+\fs24 \
+\pard\pardeftab720\sa240
+
+\i\fs32 \cf0 3 Usage
+\i0\fs24 \
+\pard\pardeftab720\sa240
+
+\f1\fs30 \cf0 Chengbin Wang z3313137 Cbwa548
+\f0\fs24 \
+\pard\pardeftab720
+\cf0 \
+\pard\pardeftab720\sa240
+
+\i\fs32 \cf0 3.1 to start bank server:
+\i0\fs24 \
+\pard\pardeftab720\sa240
+
+\fs30 \cf0 % java bank BANK_PORT
+\fs24 \
+\pard\pardeftab720\sa240
+
+\i\fs32 \cf0 3.2 to start shop server:
+\i0\fs24 \
+\pard\pardeftab720\sa240
+
+\fs30 \cf0 % java shop SHOP_PORT BANK_HOST_IP BANK_PORT
+\fs24 \
+\pard\pardeftab720\sa240
+
+\i\fs32 \cf0 3.3 The user will open a Firefox web browser and type the following url:
+\i0\fs24 \
+\pard\pardeftab720\sa240
+
+\fs30 \cf0 http://SHOP_HOST_IP:SHOP_PORT/index.html
+\fs24 \
+\pard\pardeftab720\sa240
+
+\i\fs32 \cf0 3.4 user can order etc.. 4.important assumption:
+\i0\fs24 \
+\pard\pardeftab720\sa240
+
+\fs30 \cf0 user will always fill in all information: if not the server will went down.
+\fs24 \
+\pard\pardeftab720\sa240
+
+\f1\fs30 \cf0 assumption comes from spec:
+\f0\fs24 \
+\pard\pardeftab720\sa240
+
+\fs30 \cf0 \'93You may assume that a user will always fill in all information, which is in the correct format i.e. the name fields will always contain alphabets; item number, quantity, postcode and credit card number are all numbers. You do not have to worry about handling these errors.\'94
+\fs24 \
+}
